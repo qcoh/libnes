@@ -1,0 +1,21 @@
+SOURCE_DIR = source
+INCLUDE_DIR = include
+BUILD_DIR = build
+TEST_SOURCE_DIR = test/source
+TEST_INCLUDE_DIR = test/include
+
+SOURCES = $(SOURCE_DIR)/*.cpp
+TEST_SOURCES = $(TEST_SOURCE_DIR)/*.cpp
+
+CC = clang++-5.0
+
+WARNINGS = -Werror -Weverything -Wno-padded -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-c++98-c++11-compat-pedantic -Wno-exit-time-destructors -Wno-weak-vtables
+
+CFLAGS = -g -c $(WARNINGS) -std=c++14 -I $(INCLUDE_DIR)
+
+: foreach $(SOURCES) |> $(CC) $(CFLAGS) %f -o %o |> $(BUILD_DIR)/%B.o {obj}
+
+: {obj} |> ar rcs %o %f |> $(BUILD_DIR)/libnes.a
+
+: foreach $(TEST_SOURCES) |> $(CC) $(CFLAGS) -I $(TEST_INCLUDE_DIR) %f -o %o |> $(BUILD_DIR)/%B.to {tobj} 
+: {obj} {tobj} |> $(CC) %f -o %o |> $(BUILD_DIR)/test

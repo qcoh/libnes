@@ -40,3 +40,4 @@ tools/
 tags
 nes
 *.nes
+build/

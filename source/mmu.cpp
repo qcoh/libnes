@@ -13,6 +13,12 @@ void MMU::write8(u16 addr, u8 v) {
 	(void)v;
 }
 
+u8 MMU::zpgRead8(u16 addr) { return read8(addr & 0xff); }
+
+u16 MMU::zpgRead16(u16 addr) {
+	return static_cast<u16>(zpgRead8(addr) | (zpgRead8(addr + 1) << 8));
+}
+
 u16 MMU::read16(u16 addr) {
 	return static_cast<u16>(read8(addr) | (read8(addr + 1) << 8));
 }

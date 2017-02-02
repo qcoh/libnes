@@ -43,6 +43,14 @@ protected:
 	u16 m_nn = 0;
 	u8& m_n = static_cast<u8*>(static_cast<void*>(&m_nn))[0];
 
+	// addressing modes
+	u8 indexedIndirect();
+	u8 indirectIndexed();
+	u8 zeroPage();
+	u8 absolute();
+	u8 zeroPageIndexed();
+	u8 absoluteIndexed(u8);
+
 private:
 	// Instructions
 
@@ -56,12 +64,7 @@ private:
 	void TXS();
 	void TYA();
 
-	template <typename T>
-	void ORA(const T& source) {
-		m_a |= static_cast<u8>(source);
-		m_zeroFlag = (m_a == 0);
-		m_signFlag = ((m_a >> 7) != 0);
-	}
+	void ORA(u8);
 
 	template <typename T>
 	void AND(const T& source) {

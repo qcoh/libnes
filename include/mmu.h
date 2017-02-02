@@ -12,6 +12,8 @@ public:
 	virtual u8 read8(u16);
 	virtual void write8(u16, u8);
 
+	u8 zpgRead8(u16);
+	u16 zpgRead16(u16);
 	u16 read16(u16);
 	void write16(u16, u16);
 

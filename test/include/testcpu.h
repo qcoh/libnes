@@ -16,6 +16,7 @@ public:
 	u8& n();
 	u16& nn();
 	u8& op();
+	u8& cycles();
 
 	BitRef<u8, u8, 0>& carryFlag();
 	BitRef<u8, u8, 1>& zeroFlag();
@@ -26,4 +27,11 @@ public:
 	BitRef<u8, u8, 7>& signFlag();
 
 	void exec();
+
+	u8 indexedIndirect();
+	u8 indirectIndexed();
+	u8 zeroPage();
+	u8 absolute();
+	u8 zeroPageIndexed();
+	u8 absoluteIndexed(u8);
 };

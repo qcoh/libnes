@@ -65,13 +65,7 @@ private:
 	void TYA();
 
 	void ORA(u8);
-
-	template <typename T>
-	void AND(const T& source) {
-		m_a &= static_cast<u8>(source);
-		m_zeroFlag = (m_a == 0);
-		m_signFlag = ((m_a >> 7) != 0);
-	}
+	void AND(u8);
 
 	template <typename T>
 	void EOR(const T& source) {

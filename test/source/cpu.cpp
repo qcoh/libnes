@@ -198,6 +198,152 @@ SCENARIO("Test CPU instructions", "[CPU]") {
 				REQUIRE(cpu.cycles() == 0);
 			}
 		}
+		WHEN("Calling AND (n, x)") {
+			cpu.a() = 0b10100000;
+			cpu.x() = 0xf0;
+			cpu.n() = 0x0f;
+			data[0xff] = 0x34;
+			data[0x00] = 0x12;
+			data[0x1234] = 0xff;
+			cpu.op() = 0x21;
+			cpu.exec();
+
+			THEN(
+			    "a == 0b10100000, zeroFlag == false, signFlag == "
+			    "true") {
+				REQUIRE(cpu.a() == 0b10100000);
+				REQUIRE(cpu.zeroFlag() == false);
+				REQUIRE(cpu.signFlag() == true);
+			}
+		}
+		WHEN("Calling AND n") {
+			cpu.a() = 0b00111100;
+			cpu.n() = 0x50;
+			data[0x50] = 0x0f;
+			cpu.op() = 0x25;
+			cpu.exec();
+
+			THEN(
+			    "a == 0b00001100, zeroFlag == fasel, signFlag == "
+			    "false") {
+				REQUIRE(cpu.a() == 0b00001100);
+				REQUIRE(cpu.zeroFlag() == false);
+				REQUIRE(cpu.signFlag() == false);
+			}
+		}
+		WHEN("Calling AND #n") {
+			cpu.a() = 0xff;
+			cpu.n() = 0;
+			cpu.op() = 0x29;
+			cpu.exec();
+
+			THEN("a == 0, zeroFlag == true, signFlag == false") {
+				REQUIRE(cpu.a() == 0);
+				REQUIRE(cpu.zeroFlag() == true);
+				REQUIRE(cpu.signFlag() == false);
+			}
+		}
+		WHEN("Calling AND nn") {
+			cpu.a() = 0x0f;
+			cpu.nn() = 0x1234;
+			data[0x1234] = 0xff;
+			cpu.op() = 0x2d;
+			cpu.exec();
+
+			THEN(
+			    "a == 0x0f, zeroFlag == false, signFlag == false") {
+				REQUIRE(cpu.a() == 0x0f);
+				REQUIRE(cpu.zeroFlag() == false);
+				REQUIRE(cpu.signFlag() == false);
+			}
+		}
+		WHEN("Calling AND (n), Y (1)") {
+			cpu.a() = 0xb0;
+			cpu.n() = 0x20;
+			cpu.y() = 0x20;
+			data[0x20] = 0x00;
+			data[0x21] = 0x20;
+			data[0x2020] = 0xff;
+			cpu.op() = 0x31;
+			cpu.exec();
+
+			THEN(
+			    "a == 0xb0, zeroFlag == false, signFlag == true, "
+			    "cycles == 0") {
+				REQUIRE(cpu.a() == 0xb0);
+				REQUIRE(cpu.zeroFlag() == false);
+				REQUIRE(cpu.signFlag() == true);
+				REQUIRE(cpu.cycles() == 0);
+			}
+		}
+		WHEN("Calling AND (n), Y (2)") {
+			cpu.a() = 0xff;
+			cpu.n() = 0xff;
+			cpu.y() = 1;
+			data[0xff] = 0xff;
+			data[0x00] = 0x20;
+			data[0x2100] = 0x89;
+			cpu.op() = 0x31;
+			cpu.exec();
+
+			THEN(
+			    "a == 0x89, zeroFlag == false, signFlag == true, "
+			    "cycles == 0") {
+				REQUIRE(cpu.a() == 0x89);
+				REQUIRE(cpu.zeroFlag() == false);
+				REQUIRE(cpu.signFlag() == true);
+				REQUIRE(cpu.cycles() == 1);
+			}
+		}
+		WHEN("Calling AND n, X") {
+			cpu.a() = 0xff;
+			cpu.n() = 0xff;
+			cpu.x() = 0x1;
+			data[0] = 0x0b;
+			cpu.op() = 0x35;
+			cpu.exec();
+
+			THEN(
+			    "a == 0x0b, zeroFlag == false, signFlag == false") {
+				REQUIRE(cpu.a() == 0x0b);
+				REQUIRE(cpu.zeroFlag() == false);
+				REQUIRE(cpu.signFlag() == false);
+			}
+		}
+		WHEN("Calling AND nn, Y") {
+			cpu.a() = 0xff;
+			cpu.nn() = 0x40ff;
+			cpu.y() = 1;
+			data[0x4100] = 0x19;
+			cpu.op() = 0x39;
+			cpu.exec();
+
+			THEN(
+			    "a == 0x19, zeroFlag == false, signFlag == false, "
+			    "cycles == 1") {
+				REQUIRE(cpu.a() == 0x19);
+				REQUIRE(cpu.zeroFlag() == false);
+				REQUIRE(cpu.signFlag() == false);
+				REQUIRE(cpu.cycles() == 1);
+			}
+		}
+		WHEN("Calling AND nn, X") {
+			cpu.a() = 0xff;
+			cpu.nn() = 0x40ef;
+			cpu.x() = 1;
+			data[0x40f0] = 0x19;
+			cpu.op() = 0x3d;
+			cpu.exec();
+
+			THEN(
+			    "a == 0x19, zeroFlag == false, signFlag == false, "
+			    "cycles == 0") {
+				REQUIRE(cpu.a() == 0x19);
+				REQUIRE(cpu.zeroFlag() == false);
+				REQUIRE(cpu.signFlag() == false);
+				REQUIRE(cpu.cycles() == 0);
+			}
+		}
 	}
 }
 

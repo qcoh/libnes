@@ -37,6 +37,30 @@ void CPU::exec() {
 	case 0x1d:  // ORA nn, X
 		ORA(absoluteIndexed(m_x));
 		break;
+	case 0x21:  // AND (n, x)
+		AND(indexedIndirect());
+		break;
+	case 0x25:  // AND n
+		AND(zeroPage());
+		break;
+	case 0x29:  // AND #n
+		AND(m_n);
+		break;
+	case 0x2d:  // AND nn
+		AND(absolute());
+		break;
+	case 0x31:  // AND (n), Y
+		AND(indirectIndexed());
+		break;
+	case 0x35:  // AND n, X
+		AND(zeroPageIndexed());
+		break;
+	case 0x39:  // AND nn, Y
+		AND(absoluteIndexed(m_y));
+		break;
+	case 0x3d:  // AND nn, X
+		AND(absoluteIndexed(m_x));
+		break;
 	default:
 		throw std::runtime_error{"Unknown instruction"};
 	}
@@ -99,6 +123,12 @@ void CPU::BRK() {
 // OR A
 void CPU::ORA(u8 v) {
 	m_a |= v;
+	m_zeroFlag = (m_a == 0);
+	m_signFlag = ((m_a >> 7) != 0);
+}
+
+void CPU::AND(u8 v) {
+	m_a &= v;
 	m_zeroFlag = (m_a == 0);
 	m_signFlag = ((m_a >> 7) != 0);
 }
